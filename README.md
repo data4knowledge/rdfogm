@@ -1,0 +1,2 @@
+# RdfOgm
+Python RDF OGM
