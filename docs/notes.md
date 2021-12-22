@@ -1,6 +1,6 @@
 # Setup
 Steps taken to get the project setup
-Install Python 3.10 using the download from (mian python site)[https://www.python.org/downloads/]
+Install Python 3.10 using the download from [main python site](https://www.python.org/downloads/)
 Install pytest
 ```
 pip install -U pytest
