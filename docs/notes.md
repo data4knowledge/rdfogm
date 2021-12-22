@@ -1,6 +1,7 @@
 # Setup
 Steps taken to get the project setup
-Install Python 3.10 using the download from [main python site](https://www.python.org/downloads/)
+
+Install Python 3.10 using the download from [main python site](https://www.python.org/downloads/).
 
 Install pytest.
 ```
@@ -13,4 +14,12 @@ alias pip=pip3
 Also updated the pip version using the following. Did so because of a warning.
 ```
 python3 -m pip install --upgrade pip 
+```
+Had to setup PYTHONPATH as follows
+```
+daveih@ipad-4 rdfogm % pwd
+/Users/daveih/Documents/python/rdfogm
+daveih@ipad-4 rdfogm % PYTHONPATH=$PYTHONPATH:/Users/daveih/Documents/python/rdfogm
+daveih@ipad-4 rdfogm % export PYTHONPATH
+daveih@ipad-4 rdfogm % echo $PYTHONPATH     
 ```
