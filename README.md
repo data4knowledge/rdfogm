@@ -1,2 +1,2 @@
-# RdfOgm
+# RDF OGM
 Python RDF OGM
