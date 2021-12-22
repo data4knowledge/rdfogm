@@ -1,0 +1,11 @@
+# Setup
+Steps taken to get the project setup
+Install Python 3.10 using the download from (mian python site)[https://www.python.org/downloads/]
+Install pytest
+```
+pip install -U pytest
+```
+Add in alias to get pip working again. In ```~/.zprofile``` add the line
+```
+alias pip=pip3
+```
