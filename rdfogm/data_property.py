@@ -1,4 +1,5 @@
-#from rdflib import Literal
+from rdflib import Graph, Literal
+from rdflib.namespace import XSD
 
 class DataProperty(object):
 
@@ -8,9 +9,13 @@ class DataProperty(object):
         self.default = self._key_value(options, 'default', '')
         self.datatype = self._key_value(options, 'datatype', 'string')
 
-    def test():
-        return ""
-        #return Literal('string')
+    @staticmethod
+    def string_literal():
+        print("1")
+        literal = Literal(DataProperty, datatype=XSD.string)
+        print(literal)
+        print("2")
+        return literal
  
     def __repr__(self) -> str:
         return super().__repr__()
