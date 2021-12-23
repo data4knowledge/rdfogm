@@ -1,7 +1,16 @@
 import pytest
+#from rdflib import Literal
 
-from rdfogm.property import Property
+from rdfogm.data_property import DataProperty
 
 def test_setting_name():
-    property = Property(name = "Jack")
+    params = {'name': 'Jack'}
+    property = DataProperty(**params)
     assert property.name == "Jack"
+
+def test():
+    params = {'name': 'Jack'}
+    property = DataProperty(**params)
+    property.test
+    assert property.name == "Jack"
+    
