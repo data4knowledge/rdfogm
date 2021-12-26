@@ -1,5 +1,6 @@
 from rdfogm.data_property import DataProperty
 from rdflib import Graph, Literal
+from rdflib import Graph, Literal
 
 print("RDFOGM 1:")
 
@@ -28,4 +29,3 @@ class Model(object):
         #print(**properties)
 
 print("RDFOGM 2: ", Model)
-
