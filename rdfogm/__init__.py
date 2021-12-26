@@ -1,9 +1,6 @@
+from rdflib import Graph, Literal
 from rdfogm.data_property import DataProperty
 from rdfogm.object_property import ObjectProperty
-from rdflib import Graph, Literal
-from rdflib import Graph, Literal
-
-print("RDFOGM 1:")
 
 class ModelMetaclass(type):
 
