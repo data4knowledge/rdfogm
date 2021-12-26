@@ -22,18 +22,19 @@ class ModelMetaclass(type):
 
     print("MMC")
 
-    def __new__(cls, *args, **kwargs):
-        print("MMC __new__", *args)
-        print("MMC __new__", **kwargs)
+    def __new__(cls, name, bases, attrs):
+        print("MMC __new__ name", name)
+        print("MMC __new__ bases", bases)
+        print("MMC __new__ attrs", attrs)
         if name=='Model':
             return type.__new__(cls, name, bases, attrs)
         print('Found model: %s' % name)
         mappings = dict()
-        for k, v in attrs.iteritems():
+        for k, v in attrs.items():
             if isinstance(v, Field):
                 print('Found mapping: %s ==> %s' % (k, v))
                 mappings[k] = v
-        for k in mappings.iterkeys():
+        for k, v in mappings.items():
             attrs.pop(k)
         attrs['__mappings__'] = mappings # 保存属性和列的映射关系
         attrs['__table__'] = name # 假设表名和类名一致
@@ -44,25 +45,12 @@ class Model(object, metaclass=ModelMetaclass):
 
     print("M")
 
-    def __new__(cls, *args, **kwargs):
-        print("M __new__", *args)
-        #if name=='Model':
-        #    return type.__new__(cls, name, bases, attrs)
-        #print('Found model: %s' % name)
-        #mappings = dict()
-        #for k, v in attrs.iteritems():
-        #    if isinstance(v, Field):
-        #        print('Found mapping: %s ==> %s' % (k, v))
-        #        mappings[k] = v
-        #for k in mappings.iterkeys():
-        #    attrs.pop(k)
-        #attrs['__mappings__'] = mappings # 保存属性和列的映射关系
-        #attrs['__table__'] = name # 假设表名和类名一致
-        return super(Model, cls).__new__(cls, *args, **kwargs)
-
     def __init__(self, **kw):
-        print("M __init__")
-        super(Model, self).__init__(**kw)
+        print("M __init__", kw)
+        #self.id = kw["id"]
+        for name, value in kw.items():
+            setattr(self, name, value)
+        #Model.__init__(self)
 
     def __getattr__(self, key):
         print("M __getattr__")
@@ -71,16 +59,17 @@ class Model(object, metaclass=ModelMetaclass):
         except KeyError:
             raise AttributeError(r"'Model' object has no attribute '%s'" % key)
 
-    def __setattr__(self, key, value):
-        print("M __setattr__")
-        self[key] = value
+#    def __setattr__(self, key, value):
+#        print("M __setattr__", key, value)
+##        setattr(self, key, value)
+#        #self.__mappings__[key] = value
 
     def save(self):
         print("M save")
         fields = []
         params = []
         args = []
-        for k, v in self.__mappings__.iteritems():
+        for k, v in self.__mappings__.items():
             fields.append(v.name)
             params.append('?')
             args.append(getattr(self, k, None))
@@ -101,7 +90,7 @@ class User(Model):
 print("RDFOGM 3: ", User)
 
 u = User(id=12345, name='Michael', email='test@orm.org', password='my-pwd')
-#u.save()
+u.save()
 
 print("RDFOGM 4: ", u)
 
