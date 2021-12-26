@@ -1,16 +1,15 @@
 from rdflib import Graph, Literal
 from rdflib.namespace import XSD
 
-class DataProperty(object):
+class ObjectProperty(object):
 
     def __init__(self, **options):
         self.name = options['name']
         self.predicate = self._key_value(options, 'predicate', options["name"])
-        self.default = self._key_value(options, 'default', '')
-        self.datatype = self._key_value(options, 'datatype', XSD.string)
-        self.read_path = False
-        self.delete_path = False
-        self.export_path = False
+        self.klass = self._key_value(options, 'klass', '')
+        self.read_path = self._key_value(options, 'read_path', False)
+        self.delete_path = self._key_value(options, 'delete_path', False)
+        self.export_path = self._key_value(options, 'export_path', False)
 
 #    @staticmethod
 #    def string_literal():
