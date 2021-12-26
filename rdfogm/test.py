@@ -92,5 +92,5 @@ print("RDFOGM 3: ", User)
 u = User(id=12345, name='Michael', email='test@orm.org', password='my-pwd')
 u.save()
 
-print("RDFOGM 4: ", u)
+print("RDFOGM 4: ", u.__dict__, u.email, u.__mappings__)
 

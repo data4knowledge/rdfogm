@@ -1,6 +1,3 @@
-from rdflib import Graph, Literal
-from rdflib.namespace import XSD
-
 class ObjectProperty(object):
 
     def __init__(self, **options):
@@ -11,10 +8,6 @@ class ObjectProperty(object):
         self.delete_path = self._key_value(options, 'delete_path', False)
         self.export_path = self._key_value(options, 'export_path', False)
 
-#    @staticmethod
-#    def string_literal():
-#        return Literal(DataProperty, datatype=XSD.string)
- 
     def __repr__(self) -> str:
         return super().__repr__()
 

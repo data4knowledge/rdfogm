@@ -1,4 +1,3 @@
-from rdflib import Graph, Literal
 from rdflib.namespace import XSD
 
 class DataProperty(object):
@@ -12,10 +11,6 @@ class DataProperty(object):
         self.delete_path = False
         self.export_path = False
 
-#    @staticmethod
-#    def string_literal():
-#        return Literal(DataProperty, datatype=XSD.string)
- 
     def __repr__(self) -> str:
         return super().__repr__()
 

@@ -1,4 +1,5 @@
 from rdfogm.data_property import DataProperty
+from rdfogm.object_property import ObjectProperty
 from rdflib import Graph, Literal
 from rdflib import Graph, Literal
 
@@ -17,40 +18,31 @@ class ModelMetaclass(type):
         print('Found model: %s' % name)
         mappings = dict()
         for k, v in attrs.items():
-            if isinstance(v, DataProperty):
+            if isinstance(v, DataProperty) or isinstance(v, ObjectProperty):
                 print('Found mapping: %s ==> %s' % (k, v))
                 mappings[k] = v
         for k, v in mappings.items():
             attrs.pop(k)
-        attrs['__mappings__'] = mappings # 保存属性和列的映射关系
-        attrs['__table__'] = name # 假设表名和类名一致
+        attrs['__mappings__'] = mappings 
+        attrs['__table__'] = name 
         return type.__new__(cls, name, bases, attrs)
 
 class Model(object, metaclass=ModelMetaclass):
-    #__metaclass__ = ModelMetaclass
-
-    print("M")
 
     def __init__(self, **kw):
-        print("M __init__", kw)
-        #self.id = kw["id"]
         for name, value in kw.items():
             setattr(self, name, value)
-        #Model.__init__(self)
 
     def __getattr__(self, key):
-        print("M __getattr__", key)
         try:
             super().__getattr__(key)
         except KeyError:
             raise AttributeError(r"'Model' object has no attribute '%s'" % key)
 
     def __setattr__(self, key, value):
-        print("M __setattr__", key, value)
         super().__setattr__(key, value)
 
     def save(self):
-        print("M save")
         fields = []
         params = []
         args = []
@@ -61,6 +53,3 @@ class Model(object, metaclass=ModelMetaclass):
         sql = 'insert into %s (%s) values (%s)' % (self.__table__, ','.join(fields), ','.join(params))
         print('SQL: %s' % sql)
         print('ARGS: %s' % str(args))
-
-
-print("RDFOGM 2: ", Model)
