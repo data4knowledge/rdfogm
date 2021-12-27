@@ -1,5 +1,7 @@
 from rdflib.namespace import XSD
 
+from property_value import PropertyValue
+
 class BaseProperty(object):
 
     def __init__(self, **options):
@@ -11,6 +13,7 @@ class BaseProperty(object):
         self.read_path = False
         self.delete_path = False
         self.export_path = False
+        self.values = []
 
     def __repr__(self) -> str:
         return super().__repr__()
@@ -20,3 +23,5 @@ class BaseProperty(object):
             return options[name]
         else:
             return default
+
+    
