@@ -1,5 +1,4 @@
 import pytest
-#from rdflib import Literal
 
 from rdfogm.data_property import DataProperty
 from rdflib.term import URIRef

@@ -22,7 +22,7 @@ class BaseProperty(object):
 
     def remove(self, old_value):
         try:
-            self.values.pop(old_value.__str__(), None)
+            self.values.pop(old_value.key(), None)
         except:
             raise BasePropertyError(f"Error deleting a value for {self.name}. Value was {old_value}.")
 
@@ -33,13 +33,14 @@ class BaseProperty(object):
     def values(self):
         return self.values
 
-    def __repr__(self) -> str:
-        return super().__repr__()
-
     def set_value(self, options, name, default):
         if name in options:
             return options[name]
         else:
             return default
+
+    def __repr__(self) -> str:
+        return super().__repr__()
+
 
 

@@ -44,3 +44,24 @@ def test_add_multiple_literal():
     assert len(property.values) == 2
     assert property.values['A string.en'].__str__() == PropertyLiteral("A string", "en").__str__()
     assert property.values['A string.fr'].__str__() == PropertyLiteral("A string", "fr").__str__()
+
+def test_remove_literal():
+    params = {'name': 'Jack', 'default': 'xxx'}
+    property = BaseProperty(**params)
+    property.add(PropertyLiteral("A string", "en"))
+    property.add(PropertyLiteral("A string", "fr"))
+    assert len(property.values) == 2
+    property.remove(PropertyLiteral("A string", "fr"))
+    assert len(property.values) == 1
+    assert property.values['A string.en'].__str__() == PropertyLiteral("A string", "en").__str__()
+
+def test_replace_literal():
+    params = {'name': 'Jack', 'default': 'xxx'}
+    property = BaseProperty(**params)
+    property.add(PropertyLiteral("A string", "en"))
+    property.add(PropertyLiteral("A string", "fr"))
+    assert len(property.values) == 2
+    property.replace(PropertyLiteral("A string", "fr"), PropertyLiteral("A string", "ge"))
+    assert len(property.values) == 2
+    assert property.values['A string.en'].__str__() == PropertyLiteral("A string", "en").__str__()
+    assert property.values['A string.ge'].__str__() == PropertyLiteral("A string", "ge").__str__()

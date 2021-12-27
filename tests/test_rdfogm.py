@@ -6,8 +6,7 @@ from rdfogm import Model
 from rdfogm.data_property import DataProperty
 
 class Person(Model):
-    params = {'name': 'name'}
-    name = DataProperty(**params)
+    name = DataProperty(**{'name': 'name'})
     surname = DataProperty(**{'name': 'surname'})
 
     def __init__(self):
@@ -17,11 +16,6 @@ def test_instance_no_params():
     person = Person()
     person.name = "Jack"
     person.surname = "Daniel's"
-    assert person.name == "Jack"
-    assert person.surname == "Daniel's"
-
-def test_instance_dict_params():
-    person = Person(name="Jack", surname = "Daniel's")
     assert person.name == "Jack"
     assert person.surname == "Daniel's"
 
