@@ -8,8 +8,6 @@ def test_setting_name():
     property = ObjectProperty(**{'name': 'Jack'})
     assert property.name == "Jack"
     assert property.predicate == "Jack"
-    assert property.default == ""
-    assert property.datatype == URIRef("http://www.w3.org/2001/XMLSchema#string")
     assert property.klass == None
     assert property.read_path == False
     assert property.delete_path == False

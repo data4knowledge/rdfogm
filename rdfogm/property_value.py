@@ -1,10 +1,10 @@
-from rdflib.namespace import XSD
-
 class PropertyValue(object):
 
-    def __init__(self):
+    def __init__(self, value=None):
+        self.__value = value
         self.__modified = False
-        self.__value = None
+        if value != None:
+            self.__modified = True
 
     @property
     def value(self):
@@ -19,4 +19,8 @@ class PropertyValue(object):
         return self.__modified
        
     def saved(self):
-       self.__modified = False 
+       self.__modified = False
+
+    def __str__(self):
+        return self.__value.__str__()
+    
