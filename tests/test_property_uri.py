@@ -7,3 +7,7 @@ def test_initial_state():
     assert value.__str__() == "XXX"
     assert value.key() == "XXX"
 
+def test_initial_state_empty():
+    value = PropertyUri("")
+    assert value.__str__() == ""
+    assert value.key() == ""
