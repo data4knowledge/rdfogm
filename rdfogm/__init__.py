@@ -1,6 +1,7 @@
 from rdflib import Graph, Literal
 from rdfogm.data_property import DataProperty
 from rdfogm.object_property import ObjectProperty
+from rdfogm.rdf_type_property import RdfTypeProperty
 from rdfogm.property_uri import PropertyUri
 
 class ModelMetaclass(type):
@@ -10,7 +11,7 @@ class ModelMetaclass(type):
             return type.__new__(cls, name, bases, attrs)
         properties = dict()
         for k, v in attrs.items():
-            if isinstance(v, DataProperty) or isinstance(v, ObjectProperty):
+            if isinstance(v, DataProperty) or isinstance(v, ObjectProperty) or isinstance(v, RdfTypeProperty):
                 properties[k] = v
         for k, v in properties.items():
             attrs.pop(k)
