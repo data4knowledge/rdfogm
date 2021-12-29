@@ -29,9 +29,12 @@ class Model(object, metaclass=ModelMetaclass):
 
     def __getattr__(self, key):
         try:
-            self.__properties__[key].values
+            if self.__properties__[key].has_one():
+                return self.__properties__[key].values()
+            else:
+                return self.__properties__[key]
         except KeyError:
-            raise AttributeError(r"A '%s' instance has no attribute named '%s'" % (key, self.__class__.__name__))
+            raise AttributeError(r"A '%s' instance has no attribute named '%s'" % (self.__class__.__name__, key))
 
     def __setattr__(self, key, value):
         try:
@@ -40,7 +43,7 @@ class Model(object, metaclass=ModelMetaclass):
             else:
                 raise AttributeError(r"Cannot set attribute '%s' directly as it has cardinality of many. Use the add method" % key)
         except KeyError:
-            raise AttributeError(r"A '%s' instance has no attribute named '%s'" % (key, self.__class__.__name__))
+            raise AttributeError(r"A '%s' instance has no attribute named '%s'" % (self.__class__.__name__, key))
 
 #    def save(self):
 #        fields = []
@@ -53,6 +56,9 @@ class Model(object, metaclass=ModelMetaclass):
 #        sql = 'insert into %s (%s) values (%s)' % (self.__table__, ','.join(fields), ','.join(params))
 #        print('SQL: %s' % sql)
 #        print('ARGS: %s' % str(args))
+
+    def properties(self):
+        return self.__properties__
 
     def is_valid(self, operation):
         return True

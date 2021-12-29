@@ -22,7 +22,6 @@ class BaseProperty(object):
         self.__values[str(self.__next_key)] = PropertyValue(new_value)
         if self.has_many(): 
             self.__next_key += 1
-        print(self.__values)
         
     def remove(self, key):
         try:
@@ -41,7 +40,10 @@ class BaseProperty(object):
         return len(self.__values)
 
     def values(self):
-        return self.__values[self.HAS_ONE_KEY].value if self.has_one() else self.__map_values()
+        if not self.__values:
+            return None if self.has_one() else self.__values
+        else:
+            return self.__values[self.HAS_ONE_KEY].value if self.has_one() else self.__map_values()
 
     def set_value(self, options, name, default, permitted=()):
         if name in options:

@@ -10,8 +10,10 @@ class DataProperty(BaseProperty):
 
     def __init__(self, **options):
         super().__init__(**options)
-        self.default = super().set_value(options, 'default', '')
+        self.default = super().set_value(options, 'default', None)
         self.datatype = super().set_value(options, 'datatype', XSD.string)
+        if self.__has_default():
+            self.add(self.default) # Setup default value
 
     def add(self, value, lang=None):
         literal =  value if isinstance(value, PropertyLiteral) else PropertyLiteral(value, lang)
@@ -20,7 +22,7 @@ class DataProperty(BaseProperty):
     def values(self):
         if self.has_one():
             literal = super().values()
-            return self.__literal_value(literal)
+            return None if literal == None else self.__literal_value(literal)
         else:
             return self.__map_values(super().values())
 
@@ -29,3 +31,8 @@ class DataProperty(BaseProperty):
 
     def __literal_value(self, literal):
         return literal.value if literal.no_language() else literal
+
+    def __has_default(self):
+        return False if self.default == None else True
+    
+    
