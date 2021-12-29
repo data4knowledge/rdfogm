@@ -29,5 +29,5 @@ def test_add_multiple():
     property = DataProperty(**{'name': 'Jack', 'cardinality': 'many'})
     property.add("A string", "en")
     property.add("A string", "fr")
-    assert property.values() == {'1': PropertyLiteral("A string", "en"), '2': PropertyLiteral("A string", "en")}
+    assert property.values() == {'1': PropertyLiteral("A string", "en"), '2': PropertyLiteral("A string", "fr")}
 

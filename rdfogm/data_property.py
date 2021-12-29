@@ -19,7 +19,12 @@ class DataProperty(BaseProperty):
     def values(self):
         if self.has_one():
             literal = super().values()
-            return literal.value if literal.no_language() else literal
+            return self.__literal_value(literal)
         else:
-            return super().values()
-        
+            return self.__map_values(super().values())
+
+    def __map_values(self, values):
+        return {k: self.__literal_value(v) for k, v in values.items()}   
+
+    def __literal_value(self, literal):
+        return literal.value if literal.no_language() else literal

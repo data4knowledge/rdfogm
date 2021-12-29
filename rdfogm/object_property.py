@@ -15,8 +15,9 @@ class ObjectProperty(BaseProperty):
         self.export_path = self.set_value(options, 'export_path', False)
 
     def add(self, value):
-        super().add(PropertyUri(value))
+        uri = PropertyUri(value) if isinstance(value, str) else value
+        super().add(uri)
 
-    def values():
+    def values(self):
         return super().values()
-
+        

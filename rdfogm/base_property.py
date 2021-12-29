@@ -22,7 +22,8 @@ class BaseProperty(object):
         self.__values[str(self.__next_key)] = PropertyValue(new_value)
         if self.has_many(): 
             self.__next_key += 1
-
+        print(self.__values)
+        
     def remove(self, key):
         try:
             self.__values.pop(key)
