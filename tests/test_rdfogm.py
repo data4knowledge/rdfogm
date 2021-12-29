@@ -40,7 +40,7 @@ def test_instance_property_set():
 
 def test_save_full():
     person = TestPerson()
-    #person.uri = PropertyUri('http://example.com#Subject11')
+    person.uri = PropertyUri('http://example.com#Subject11')
     person.name = "Jack"
     person.surname = "Daniel's"
     person.nicknames.add("sid") 

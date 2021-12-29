@@ -14,7 +14,6 @@ class ModelMetaclass(type):
         if name=='Model':
             return type.__new__(cls, name, bases, attrs)
         properties = dict()
-        print("NNN", attrs)
         for k, v in attrs.items():
             if isinstance(v, DataProperty) or isinstance(v, ObjectProperty) or isinstance(v, RdfTypeProperty):
                 properties[k] = v
@@ -22,9 +21,11 @@ class ModelMetaclass(type):
         for k, v in properties.items():
             attrs.pop(k)
         attrs['__properties__'] = properties 
-        attrs['__uri__'] = PropertyUri("")
+        attrs['uri'] = PropertyUri("")
         attrs['__new_record__'] = True
         attrs['__destroyed__'] = False
+        print(attrs)
+        print(cls.__dict__)
         return type.__new__(cls, name, bases, attrs)
 
 class Model(object, metaclass=ModelMetaclass):
@@ -36,7 +37,9 @@ class Model(object, metaclass=ModelMetaclass):
 
     def __getattr__(self, key):
         try:
-            if self.__properties__[key].has_one():
+            if key == "uri":
+                return super().__getattr__(key)
+            elif self.__properties__[key].has_one():
                 return self.__properties__[key].values()
             else:
                 return self.__properties__[key]
@@ -45,7 +48,9 @@ class Model(object, metaclass=ModelMetaclass):
 
     def __setattr__(self, key, value):
         try:
-            if self.__properties__[key].has_one:
+            if key == "uri":
+                return super().__setattr__(key, value)
+            elif self.__properties__[key].has_one:
                 self.__properties__[key].add(value)
             else:
                 raise AttributeError(r"Cannot set attribute '%s' directly as it has cardinality of many. Use the add method" % key)
@@ -94,8 +99,8 @@ class Model(object, metaclass=ModelMetaclass):
         for kp, vp in self.__properties__.items():
             print("Property %s" % (vp.name))
             for kv, vv in vp.values_as_dict().items():
-                print("Triple (%s,%s,%s)" % (self.__uri__, vp.predicate, vv.value))
-                other_graph.add((self.__uri__, vp.predicate, vv.value))
+                print("Triple (%s,%s,%s)" % (self.uri, vp.predicate, vv.value))
+                other_graph.add((self.uri, vp.predicate, vv.value))
 
         #ng += other_graph
         #ng.commit()
