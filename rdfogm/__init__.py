@@ -27,14 +27,23 @@ class Model(object, metaclass=ModelMetaclass):
         for name, value in kw.items():
             setattr(self, name, value)
 
-#    def __getattr__(self, key):
-#        try:
-#            super().__getattr__(key)
-#        except KeyError:
-#            raise AttributeError(r"'Model' object has no attribute '%s'" % key)
+    def __getattr__(self, key):
+        try:
+            self.__properties__[key].values
+        except KeyError:
+            raise AttributeError(r"'Model' object has no attribute '%s'" % key)
 
-#    def __setattr__(self, key, value):
-#        super().__setattr__(key, value)
+    def __setattr__(self, key, value):
+        try:
+            if self.__properties__[key].has_one:
+                self.__properties__[key].add(value)
+            else:
+                raise AttributeError(r"Cannot set attribute '%s' directly as it has cardinality of many. Use the add method." % key)
+        except KeyError:
+            raise AttributeError(r"The object has no attribute '%s'" % key)
+        except:
+            raise AttributeError(r"Something went wrong setting attribute '%s'" % key)
+        
 
 #    def save(self):
 #        fields = []
@@ -58,22 +67,33 @@ class Model(object, metaclass=ModelMetaclass):
         persisted = self._is_persisted()
         return ':update' if persisted else ':create'
 
-    def _create_or_update(operation):
-        pass
-#        sparql = Sparql::Update.new(@transaction)
-#        sparql.default_namespace(@uri.namespace)
-#        to_sparql(sparql, recurse)
-#        operation == :create ? sparql.create : sparql.update(@uri)
+    def _create_or_update(self, operation):
 
-#        sparql.add({uri: @uri}, {prefix: :rdf, fragment: "type"}, {uri: self.class.rdf_type})
-#        self.properties.each do |property|
-#            next if object_empty?(property)
-#            property.to_triples(sparql, @uri)
-#            serialize_object(sparql, property, ignore_persistence) if recurse
-#        end
+        print("CREATE or UPDATE")
+
+        #endpoint = r"http://localhost:3030/test/query"
+        #store = sparqlstore.SPARQLUpdateStore(autocommit=False)
+        #store.open((endpoint,r"http://localhost:3030/test/update"))
+    
+        #Graph to add
+        #default_graph = URIRef('http://example.org/default-graph')
+        #ng = Graph(store, identifier=default_graph)
+    
+        other_graph = Graph(store='Memory')
+
+        for kp, vp in self.__properties__.items():
+            print("Property %s" % (vp.name))
+            for kv, vv in vp.values.items():
+                other_graph.add((self.__uri__, vp.predicate, vv.value))
+                print("Adding %s" % (vv.value))
+
+        #ng += other_graph
+        #ng.commit()
 
     def save(self):
+        print("SAVE")
         operation = self._what_operation()
+        print("Operation: ", operation)
         if not self.is_valid(operation): return self 
         self._create_or_update(operation)
 

@@ -37,7 +37,7 @@ source env/bin/activate
 deactivate    
 ```
 
-## Running Tests With Debugger
+## Running Tests With Debugger And Console Output
 
 ```
 pytest tests/ --pdb -rP   
