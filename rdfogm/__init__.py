@@ -7,10 +7,6 @@ from rdfogm.property_uri import PropertyUri
 class ModelMetaclass(type):
 
     def __new__(cls, name, bases, attrs):
-        print("A", cls)
-        print("A", name)
-        print("A", bases)
-        print("A", attrs)
         if name=='Model':
             return type.__new__(cls, name, bases, attrs)
         properties = dict()
@@ -24,8 +20,6 @@ class ModelMetaclass(type):
         attrs['uri'] = PropertyUri("")
         attrs['__new_record__'] = True
         attrs['__destroyed__'] = False
-        print(attrs)
-        print(cls.__dict__)
         return type.__new__(cls, name, bases, attrs)
 
 class Model(object, metaclass=ModelMetaclass):
@@ -56,18 +50,6 @@ class Model(object, metaclass=ModelMetaclass):
                 raise AttributeError(r"Cannot set attribute '%s' directly as it has cardinality of many. Use the add method" % key)
         except KeyError:
             raise AttributeError(r"A '%s' instance has no attribute named '%s'" % (self.__class__.__name__, key))
-
-#    def save(self):
-#        fields = []
-#        params = []
-#        args = []
-#        for k, v in self.__properties__.items():
-#            fields.append(v.name)
-#            params.append('?')
-#            args.append(getattr(self, k, None))
-#        sql = 'insert into %s (%s) values (%s)' % (self.__table__, ','.join(fields), ','.join(params))
-#        print('SQL: %s' % sql)
-#        print('ARGS: %s' % str(args))
 
     def properties(self):
         return self.__properties__
