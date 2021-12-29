@@ -9,3 +9,24 @@ def test_setting_name():
     assert property.predicate == "Jack"
     assert property.default == ""
     assert property.datatype == URIRef("http://www.w3.org/2001/XMLSchema#string")
+
+def test_setting_cardinality():
+    property = DataProperty(**{'name': 'Jack', 'cardinality': 'many'})
+    assert property.name == "Jack"
+    assert property.predicate == "Jack"
+    assert property.default == ""
+    assert property.datatype == URIRef("http://www.w3.org/2001/XMLSchema#string")
+    assert property.cardinality == "many"
+
+def test_add_single():
+    property = DataProperty(**{'name': 'Jack', 'cardinality': 'one'})
+    property.add("A string")
+    print(property.values())
+    assert property.values() == "A string"
+
+def test_add_multiple():
+    property = DataProperty(**{'name': 'Jack', 'cardinality': 'many'})
+    property.add(**{"A string", "en"})
+    property.add(**{"A string", "fr"})
+    assert property.values() == "A string"
+

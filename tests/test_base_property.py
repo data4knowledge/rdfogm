@@ -2,6 +2,7 @@ import pytest
 
 from rdfogm.base_property import BaseProperty, BasePropertyError
 from rdfogm.property_uri import PropertyUri
+from rdflib.term import URIRef
 from rdfogm.property_literal import PropertyLiteral
 
 def test_setting_properties():
@@ -65,72 +66,71 @@ def test_setting_default_set():
 def test_add_uri():
     params = {'name': 'Jack'}
     property = BaseProperty(**params)
-    property.add(PropertyUri("http://www.w3.org/2001/XMLSchema#string"))
-    assert len(property.values) == 1
-    assert property.values['1'].__str__() == "http://www.w3.org/2001/XMLSchema#string"
+    uri = URIRef("http://www.w3.org/2001/XMLSchema#string")
+    print(uri)
+    property.add(uri)
+    assert property.len() == 1
+    assert property.values().__str__() == "http://www.w3.org/2001/XMLSchema#string"
 
 def test_add_literal():
     property = BaseProperty(**{'name': 'Jack'})
     literal = PropertyLiteral("A string", "en")
     property.add(literal)
-    assert len(property.values) == 1
-    assert property.values['1'].__str__() == PropertyLiteral("A string", "en").__str__()
+    assert property.len() == 1
+    assert property.values().__str__() == PropertyLiteral("A string", "en").__str__()
 
 def test_add_literal_single():
     property = BaseProperty(**{'name': 'Jack'})
     literal = PropertyLiteral("A string", "en")
-    print("Cardinality:", property.cardinality)
     property.add(literal)
-    print("Key:", property.next_key)
-    assert len(property.values) == 1
-    assert property.values['1'].__str__() == PropertyLiteral("A string", "en").__str__()
+    assert property.len() == 1
+    assert property.values().__str__() == PropertyLiteral("A string", "en").__str__()
     literal = PropertyLiteral("A second string", "en")
     property.add(literal)
-    assert len(property.values) == 1
-    assert property.values['1'].__str__() == PropertyLiteral("A second string", "en").__str__()
+    assert property.len() == 1
+    assert property.values().__str__() == PropertyLiteral("A second string", "en").__str__()
 
 def test_add_multiple_literal():
     params = {'name': 'Jack', 'cardinality': 'many'}
     property = BaseProperty(**params)
     property.add(PropertyLiteral("A string", "en"))
-    print("Key:", property.next_key)
     property.add(PropertyLiteral("A string", "fr"))
-    assert len(property.values) == 2
-    assert property.values['1'].__str__() == PropertyLiteral("A string", "en").__str__()
-    assert property.values['2'].__str__() == PropertyLiteral("A string", "fr").__str__()
+    assert property.len() == 2
+    assert property.values()['1'].__str__() == PropertyLiteral("A string", "en").__str__()
+    assert property.values()['2'].__str__() == PropertyLiteral("A string", "fr").__str__()
 
 def test_remove_literal():
     params = {'name': 'Jack', 'cardinality': 'many'}
     property = BaseProperty(**params)
     property.add(PropertyLiteral("A string", "en"))
     property.add(PropertyLiteral("A string", "fr"))
-    assert len(property.values) == 2
+    assert property.len() == 2
     property.remove('2')
-    assert len(property.values) == 1
-    assert property.values['1'].__str__() == PropertyLiteral("A string", "en").__str__()
+    assert property.len() == 1
+    assert property.values()['1'].__str__() == PropertyLiteral("A string", "en").__str__()
 
 def test_remove_literal_exception():
     params = {'name': 'Jack', 'cardinality': 'many'}
     property = BaseProperty(**params)
     with pytest.raises(BasePropertyError) as excinfo:   
         property.remove('3')
-    assert 'Error removing a value for Jack.' in str(excinfo.value)
+    assert 'Error removing a value for Jack' in str(excinfo.value)
 
 def test_replace_literal():
     params = {'name': 'Jack', 'cardinality': 'many'}
     property = BaseProperty(**params)
     property.add(PropertyLiteral("A string", "en"))
     property.add(PropertyLiteral("A string", "fr"))
-    assert len(property.values) == 2
+    assert property.len() == 2
     property.replace('2', PropertyLiteral("A string", "ge"))
-    assert len(property.values) == 2
+    assert property.len() == 2
     print(property.values)
-    assert property.values['1'].__str__() == PropertyLiteral("A string", "en").__str__()
-    assert property.values['2'].__str__() == PropertyLiteral("A string", "ge").__str__()
+    assert property.values()['1'].__str__() == PropertyLiteral("A string", "en").__str__()
+    assert property.values()['2'].__str__() == PropertyLiteral("A string", "ge").__str__()
 
 def test_replace_literal_exception():
     params = {'name': 'Jack', 'cardinality': 'many'}
     property = BaseProperty(**params)
     with pytest.raises(BasePropertyError) as excinfo:   
         property.replace('1', PropertyLiteral("A string", "ge"))
-    assert 'Error replacing a value for Jack.' in str(excinfo.value)
+    assert 'Error replacing a value for Jack' in str(excinfo.value)

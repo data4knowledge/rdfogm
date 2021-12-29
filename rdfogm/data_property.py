@@ -13,9 +13,9 @@ class DataProperty(BaseProperty):
         self.default = super().set_value(options, 'default', '')
         self.datatype = super().set_value(options, 'datatype', XSD.string)
 
-    def add(self, new_value):
-        if isinstance(new_value, PropertyLiteral):
-            super(self).add(new_value)
-        else:
-            raise DataPropertyError(f"Error adding a value for a data property. Invalid class {type(new_value)}.")
+    def add(self, value, lang=None):
+        super().add(PropertyLiteral(value, lang))
 
+    def values(self):
+        return super().values()
+        

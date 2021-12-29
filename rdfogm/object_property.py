@@ -14,9 +14,9 @@ class ObjectProperty(BaseProperty):
         self.delete_path = self.set_value(options, 'delete_path', False)
         self.export_path = self.set_value(options, 'export_path', False)
 
-    def add(self, new_value):
-        if isinstance(new_value, PropertyUri):
-            super(self).add(new_value)
-        else:
-            raise ObjectPropertyError(f"Error adding a value for an object property. Invalid class {type(new_value)}.")
+    def add(self, value):
+        super().add(PropertyUri(value))
+
+    def values():
+        return super().values()
 

@@ -31,19 +31,16 @@ class Model(object, metaclass=ModelMetaclass):
         try:
             self.__properties__[key].values
         except KeyError:
-            raise AttributeError(r"'Model' object has no attribute '%s'" % key)
+            raise AttributeError(r"A '%s' instance has no attribute named '%s'" % (key, self.__class__.__name__))
 
     def __setattr__(self, key, value):
         try:
             if self.__properties__[key].has_one:
                 self.__properties__[key].add(value)
             else:
-                raise AttributeError(r"Cannot set attribute '%s' directly as it has cardinality of many. Use the add method." % key)
+                raise AttributeError(r"Cannot set attribute '%s' directly as it has cardinality of many. Use the add method" % key)
         except KeyError:
-            raise AttributeError(r"The object has no attribute '%s'" % key)
-        except:
-            raise AttributeError(r"Something went wrong setting attribute '%s'" % key)
-        
+            raise AttributeError(r"A '%s' instance has no attribute named '%s'" % (key, self.__class__.__name__))
 
 #    def save(self):
 #        fields = []
