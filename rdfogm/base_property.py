@@ -45,6 +45,9 @@ class BaseProperty(object):
         else:
             return self.__values[self.HAS_ONE_KEY].value if self.has_one() else self.__map_values()
 
+    def values_as_dict(self):
+        return self.__values
+
     def set_value(self, options, name, default, permitted=()):
         if name in options:
             if (not permitted) or (permitted and options[name] in permitted):

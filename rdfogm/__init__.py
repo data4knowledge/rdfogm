@@ -7,12 +7,18 @@ from rdfogm.property_uri import PropertyUri
 class ModelMetaclass(type):
 
     def __new__(cls, name, bases, attrs):
+        print("A", cls)
+        print("A", name)
+        print("A", bases)
+        print("A", attrs)
         if name=='Model':
             return type.__new__(cls, name, bases, attrs)
         properties = dict()
+        print("NNN", attrs)
         for k, v in attrs.items():
             if isinstance(v, DataProperty) or isinstance(v, ObjectProperty) or isinstance(v, RdfTypeProperty):
                 properties[k] = v
+                print(k)
         for k, v in properties.items():
             attrs.pop(k)
         attrs['__properties__'] = properties 
@@ -25,6 +31,7 @@ class Model(object, metaclass=ModelMetaclass):
 
     def __init__(self, **kw):
         for name, value in kw.items():
+            print(name)
             setattr(self, name, value)
 
     def __getattr__(self, key):
@@ -86,9 +93,9 @@ class Model(object, metaclass=ModelMetaclass):
 
         for kp, vp in self.__properties__.items():
             print("Property %s" % (vp.name))
-            for kv, vv in vp.values.items():
+            for kv, vv in vp.values_as_dict().items():
+                print("Triple (%s,%s,%s)" % (self.__uri__, vp.predicate, vv.value))
                 other_graph.add((self.__uri__, vp.predicate, vv.value))
-                print("Adding %s" % (vv.value))
 
         #ng += other_graph
         #ng.commit()
