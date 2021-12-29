@@ -17,5 +17,12 @@ class DataProperty(BaseProperty):
         super().add(PropertyLiteral(value, lang))
 
     def values(self):
-        return super().values()
+        if self.has_one():
+            literal = super().values()
+            print("VALUES 1", type(literal))
+            print("VALUES 2", literal.value)
+            print("VALUES 2", literal.no_language())
+            return literal.value if literal.no_language() else literal
+        else:
+            return super().values()
         

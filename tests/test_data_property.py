@@ -1,6 +1,7 @@
 import pytest
 
 from rdfogm.data_property import DataProperty
+from rdfogm.property_literal import PropertyLiteral
 from rdflib.term import URIRef
 
 def test_setting_name():
@@ -26,7 +27,7 @@ def test_add_single():
 
 def test_add_multiple():
     property = DataProperty(**{'name': 'Jack', 'cardinality': 'many'})
-    property.add(**{"A string", "en"})
-    property.add(**{"A string", "fr"})
-    assert property.values() == "A string"
+    property.add("A string", "en")
+    property.add("A string", "fr")
+    assert property.values() == {'1': PropertyLiteral("A string", "en"), '2': PropertyLiteral("A string", "en")}
 
