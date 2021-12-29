@@ -20,7 +20,6 @@ class BaseProperty(object):
 
     def add(self, new_value):
         self.__values[str(self.__next_key)] = PropertyValue(new_value)
-        print(self.__values)
         if self.has_many(): 
             self.__next_key += 1
 
@@ -41,7 +40,7 @@ class BaseProperty(object):
         return len(self.__values)
 
     def values(self):
-        return self.__values[self.HAS_ONE_KEY].value if self.has_one() else self.__values
+        return self.__values[self.HAS_ONE_KEY].value if self.has_one() else self.__map_values()
 
     def set_value(self, options, name, default, permitted=()):
         if name in options:
@@ -57,6 +56,9 @@ class BaseProperty(object):
 
     def has_one(self):
         return True if self.cardinality == self.CARDINALITY[0] else False
+
+    def __map_values(self):
+        return {k: v.value for k, v in self.__values.items()}
 
     def __repr__(self) -> str:
         return super().__repr__()
