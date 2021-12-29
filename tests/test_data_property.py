@@ -19,11 +19,22 @@ def test_setting_cardinality():
     assert property.datatype == URIRef("http://www.w3.org/2001/XMLSchema#string")
     assert property.cardinality == "many"
 
-def test_add_single():
+def test_add_single_string():
     property = DataProperty(**{'name': 'Jack', 'cardinality': 'one'})
     property.add("A string")
     print(property.values())
     assert property.values() == "A string"
+
+def test_add_single_literal():
+    property = DataProperty(**{'name': 'Jack', 'cardinality': 'one'})
+    property.add(PropertyLiteral("A string"))
+    print(property.values())
+    assert property.values() == "A string"
+
+def test_add_single_literal_lang():
+    property = DataProperty(**{'name': 'Jack', 'cardinality': 'one'})
+    property.add(PropertyLiteral("A string", "de"))
+    assert property.values() == PropertyLiteral("A string", "de")
 
 def test_add_multiple():
     property = DataProperty(**{'name': 'Jack', 'cardinality': 'many'})

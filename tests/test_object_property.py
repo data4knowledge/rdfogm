@@ -28,6 +28,12 @@ def test_add_single():
     print(property.values())
     assert property.values() == PropertyUri("http://example.com#A")
 
+def test_add_single_string():
+    property = ObjectProperty(**{'name': 'Jack', 'cardinality': 'one'})
+    property.add("http://example.com#A")
+    print(property.values())
+    assert property.values() == PropertyUri("http://example.com#A")
+
 def test_add_multiple():
     property = ObjectProperty(**{'name': 'Jack', 'cardinality': 'many'})
     property.add(PropertyUri("http://example.com#A"))

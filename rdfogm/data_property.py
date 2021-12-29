@@ -14,7 +14,8 @@ class DataProperty(BaseProperty):
         self.datatype = super().set_value(options, 'datatype', XSD.string)
 
     def add(self, value, lang=None):
-        super().add(PropertyLiteral(value, lang))
+        literal =  value if isinstance(value, PropertyLiteral) else PropertyLiteral(value, lang)
+        super().add(literal)
 
     def values(self):
         if self.has_one():
