@@ -4,7 +4,7 @@ import rdfogm
 from rdflib import URIRef, Literal
 from rdfogm import Model, ObjectProperty, DataProperty, RdfTypeProperty, PropertyUri
 
-class TestPerson(Model):
+class PersonTest(Model):
     rdf_type = RdfTypeProperty(PropertyUri("http://www.w3.org/TypeX"))
     name = DataProperty(**{'name': 'name', 'cardinality': 'one', 'predicate': PropertyUri("http://www.w3.org/name")})
     surname = DataProperty(**{'name': 'surname', 'cardinality': 'one', 'predicate': PropertyUri("http://www.w3.org/surname")})
@@ -17,7 +17,7 @@ class TestPerson(Model):
         super().__init__()
 
 def test_instance_defaults():
-    person = TestPerson()
+    person = PersonTest()
     assert person.has_default == "xxx"
     assert person.name == None
     assert person.surname == None
@@ -26,7 +26,7 @@ def test_instance_defaults():
     assert person.links.values() == {}
 
 def test_instance_property_set():
-    person = TestPerson()
+    person = PersonTest()
     person.name = "Jack"
     person.surname = "Daniel's"
     person.nicknames.add("sid") 
@@ -39,7 +39,7 @@ def test_instance_property_set():
     assert person.links.values()['1'] == PropertyUri('http://example.com#AS2') 
 
 def test_save_full():
-    person = TestPerson()
+    person = PersonTest()
     person.uri = PropertyUri('http://example.com#Subject11')
     person.name = "Jack"
     person.surname = "Daniel's"
@@ -50,7 +50,7 @@ def test_save_full():
     person.save()
 
 def test_save_partial():
-    person = TestPerson()
+    person = PersonTest()
     person.uri = PropertyUri('http://example.com#Subject22')
     person.name = "Jack"
     person.save()
@@ -59,17 +59,17 @@ def test_save_partial():
 
 def test_find():
     uri = PropertyUri('http://www.data4knowledge.dk/ms/test-data-2')
-    person = TestPerson.find(uri)
-    assert type(person) == TestPerson
+    person = PersonTest.find(uri)
+    assert type(person) == PersonTest
 
 def test_cannot_find():
     uri = PropertyUri("http://dbpedia.org/resource/Asturias")
-    person = TestPerson.find(uri)
+    person = PersonTest.find(uri)
     assert person == None
 
 def test_extra_triples():
     uri = PropertyUri('http://www.data4knowledge.dk/ms/test-data-2')
-    person = TestPerson.find(uri)
+    person = PersonTest.find(uri)
     print(len(person.triples()))
     assert len(person.triples()) == 5
 
