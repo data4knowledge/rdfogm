@@ -8,14 +8,14 @@ def test_setting_name():
     property = DataProperty(**{'name': 'Jack'})
     assert property.name == "Jack"
     assert property.predicate == "Jack"
-    assert property.default == ""
+    assert property.default == None
     assert property.datatype == URIRef("http://www.w3.org/2001/XMLSchema#string")
 
 def test_setting_cardinality():
     property = DataProperty(**{'name': 'Jack', 'cardinality': 'many'})
     assert property.name == "Jack"
     assert property.predicate == "Jack"
-    assert property.default == ""
+    assert property.default == None
     assert property.datatype == URIRef("http://www.w3.org/2001/XMLSchema#string")
     assert property.cardinality == "many"
 

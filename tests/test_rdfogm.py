@@ -50,23 +50,28 @@ def test_save_full():
     person.save()
 
 def test_save_partial():
-    uri = URIRef("http://dbpedia.org/resource/Asturias")
-    person = TestPerson.find(uri)
-    person.name = "Jack Updated"
+    person = TestPerson()
+    person.uri = PropertyUri('http://example.com#Subject22')
+    person.name = "Jack"
+    person.save()
+    person.surname = "Fred"
     person.save()
 
 def test_find():
-    uri = URIRef("http://dbpedia.org/resource/Asturias")
+    uri = PropertyUri('http://www.data4knowledge.dk/ms/test-data-2')
     person = TestPerson.find(uri)
+    assert type(person) == TestPerson
 
 def test_cannot_find():
-    uri = URIRef("http://dbpedia.org/resource/Asturias")
+    uri = PropertyUri("http://dbpedia.org/resource/Asturias")
     person = TestPerson.find(uri)
+    assert person == None
 
 def test_extra_triples():
-    uri = URIRef("http://dbpedia.org/resource/Asturias")
+    uri = PropertyUri('http://www.data4knowledge.dk/ms/test-data-2')
     person = TestPerson.find(uri)
-
+    print(len(person.triples()))
+    assert len(person.triples()) == 5
 
 
 

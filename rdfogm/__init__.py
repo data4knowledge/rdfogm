@@ -3,6 +3,7 @@ from rdfogm.data_property import DataProperty
 from rdfogm.object_property import ObjectProperty
 from rdfogm.rdf_type_property import RdfTypeProperty
 from rdfogm.property_uri import PropertyUri
+from rdfogm.connection import Connection
 
 class ModelMetaclass(type):
 
@@ -10,23 +11,29 @@ class ModelMetaclass(type):
         if name=='Model':
             return type.__new__(cls, name, bases, attrs)
         properties = dict()
+        predicates = dict()
         for k, v in attrs.items():
             if isinstance(v, DataProperty) or isinstance(v, ObjectProperty) or isinstance(v, RdfTypeProperty):
                 properties[k] = v
-                print(k)
         for k, v in properties.items():
             attrs.pop(k)
+            predicates[v.predicate.__str__] = v
         attrs['__properties__'] = properties 
-        attrs['uri'] = PropertyUri("")
+        attrs['__predicates__'] = predicates
+        attrs['uri'] = None
         attrs['__new_record__'] = True
         attrs['__destroyed__'] = False
+        attrs['__connection__'] = Connection(PropertyUri('http://example.org/default-graph'))
+        attrs['__triples__'] = []
         return type.__new__(cls, name, bases, attrs)
 
 class Model(object, metaclass=ModelMetaclass):
 
+    CREATE_OP = 'create'
+    UPDATE_OP = 'update'
+
     def __init__(self, **kw):
         for name, value in kw.items():
-            print(name)
             setattr(self, name, value)
 
     def __getattr__(self, key):
@@ -54,6 +61,9 @@ class Model(object, metaclass=ModelMetaclass):
     def properties(self):
         return self.__properties__
 
+    def triples(self):
+        return self.__triples__
+
     def is_valid(self, operation):
         return True
 
@@ -62,30 +72,23 @@ class Model(object, metaclass=ModelMetaclass):
 
     def _what_operation(self):
         persisted = self._is_persisted()
-        return ':update' if persisted else ':create'
+        return self.UPDATE_OP if persisted else self.CREATE_OP
 
     def _create_or_update(self, operation):
-
         print("CREATE or UPDATE")
-
-        #endpoint = r"http://localhost:3030/test/query"
-        #store = sparqlstore.SPARQLUpdateStore(autocommit=False)
-        #store.open((endpoint,r"http://localhost:3030/test/update"))
-    
-        #Graph to add
-        #default_graph = URIRef('http://example.org/default-graph')
-        #ng = Graph(store, identifier=default_graph)
-    
-        other_graph = Graph(store='Memory')
-
-        for kp, vp in self.__properties__.items():
-            print("Property %s" % (vp.name))
-            for kv, vv in vp.values_as_dict().items():
-                print("Triple (%s,%s,%s)" % (self.uri, vp.predicate, vv.value))
-                other_graph.add((self.uri, vp.predicate, vv.value))
-
-        #ng += other_graph
-        #ng.commit()
+        if operation == self.CREATE_OP:
+            self.__connection__.temporary_graph()
+            for kp, vp in self.__properties__.items():
+                print("Property %s" % (vp.name))
+                for kv, vv in vp.values_as_dict().items():
+                    if not vv.to_be_saved:
+                        continue
+                    print("Triple (%s,%s,%s)" % (self.uri, vp.predicate, vv.value))
+                    vv.saved
+                    self.__connection__.add(self.uri, vp.predicate, vv.value)
+            self.__connection__.commit()
+        else:
+            pass
 
     def save(self):
         print("SAVE")
@@ -94,4 +97,22 @@ class Model(object, metaclass=ModelMetaclass):
         if not self.is_valid(operation): return self 
         self._create_or_update(operation)
 
-    
+    @classmethod
+    def find(cls, uri_or_id):
+        object = None
+        connection = Connection(PropertyUri('http://example.org/default-graph'))
+        uri = cls.__to_uri(uri_or_id)
+        result = connection.find(uri)
+        for p, o in result:
+            object = cls()
+            try:
+                property = object.__predicates__[p.__str__]
+                property.add(o)
+            except:
+                object.__triples__.append((uri, p, o))
+        connection = None
+        return object
+
+    @classmethod
+    def __to_uri(cls, uri_or_id):
+        return uri_or_id if isinstance(uri_or_id, PropertyUri) else PropertyUri.from_id(uri_or_id)
