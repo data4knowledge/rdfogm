@@ -84,7 +84,6 @@ def test_extra_triples():
     ts.upload("/Users/daveih/Documents/python/rdfogm/tests/files/data-1.ttl", "http://www.data4knowledge/graphs/test")
     uri = PropertyUri('http://www.data4knowledge/orgs/DUNS123456789')
     person = PersonTest.find(uri)
-    print(len(person.triples()))
     assert len(person.triples()) == 7
 
 

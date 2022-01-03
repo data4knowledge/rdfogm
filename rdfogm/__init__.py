@@ -37,6 +37,7 @@ class Model(object, metaclass=ModelMetaclass):
     def __init__(self, **kw):
         for name, value in kw.items():
             setattr(self, name, value)
+        setattr(self, '__triples__', [])
 
     def __getattr__(self, key):
         try:
@@ -51,7 +52,7 @@ class Model(object, metaclass=ModelMetaclass):
 
     def __setattr__(self, key, value):
         try:
-            if key == "uri":
+            if key == "uri" or key == "__triples__":
                 return super().__setattr__(key, value)
             elif self.__properties__[key].has_one:
                 self.__properties__[key].add(value)
@@ -66,6 +67,9 @@ class Model(object, metaclass=ModelMetaclass):
     def triples(self):
         return self.__triples__
 
+    def clear_triples(self):
+        self.__triples__ = []
+
     def is_valid(self, operation):
         return True
 
@@ -77,15 +81,12 @@ class Model(object, metaclass=ModelMetaclass):
         return self.UPDATE_OP if persisted else self.CREATE_OP
 
     def _create_or_update(self, operation):
-        print("CREATE or UPDATE")
         if operation == self.CREATE_OP:
             self.__connection__.temporary_graph()
             for kp, vp in self.__properties__.items():
-                print("Property %s" % (vp.name))
                 for kv, vv in vp.values_as_dict().items():
                     if not vv.to_be_saved:
                         continue
-                    print("Triple (%s,%s,%s)" % (self.uri, vp.predicate, vv.value))
                     vv.saved
                     self.__connection__.add(self.uri, vp.predicate, vv.value)
             self.__connection__.commit()
@@ -93,9 +94,7 @@ class Model(object, metaclass=ModelMetaclass):
             pass
 
     def save(self):
-        print("SAVE")
         operation = self._what_operation()
-        print("Operation: ", operation)
         if not self.is_valid(operation): return self 
         self._create_or_update(operation)
 
@@ -107,7 +106,8 @@ class Model(object, metaclass=ModelMetaclass):
         uri = cls.__to_uri(uri_or_id)
         result = connection.find(uri)
         for p, o in result:
-            object = cls()
+            if object == None:
+                object = cls()
             try:
                 property = object.__predicates__[p.__str__]
                 property.add(o)
