@@ -9,7 +9,6 @@ class TripleStore:
     def clear(self, graph='DEFAULT'):
         if graph != 'DEFAULT':
             graph = f'GRAPH <{graph}>'
-        print(graph)
         self.__update(f'CLEAR {graph}')
 
     def upload(self, filename, graph=""):

@@ -67,7 +67,6 @@ def test_add_uri():
     params = {'name': 'Jack'}
     property = BaseProperty(**params)
     uri = URIRef("http://www.w3.org/2001/XMLSchema#string")
-    print(uri)
     property.add(uri)
     assert property.len() == 1
     assert property.values().__str__() == "http://www.w3.org/2001/XMLSchema#string"
@@ -124,7 +123,6 @@ def test_replace_literal():
     assert property.len() == 2
     property.replace('2', PropertyLiteral("A string", "ge"))
     assert property.len() == 2
-    print(property.values)
     assert property.values()['1'].__str__() == PropertyLiteral("A string", "en").__str__()
     assert property.values()['2'].__str__() == PropertyLiteral("A string", "ge").__str__()
 

@@ -25,13 +25,11 @@ def test_setting_klass_set():
 def test_add_single():
     property = ObjectProperty(**{'name': 'Jack', 'cardinality': 'one'})
     property.add(PropertyUri("http://example.com#A"))
-    print(property.values())
     assert property.values() == PropertyUri("http://example.com#A")
 
 def test_add_single_string():
     property = ObjectProperty(**{'name': 'Jack', 'cardinality': 'one'})
     property.add("http://example.com#A")
-    print(property.values())
     assert property.values() == PropertyUri("http://example.com#A")
 
 def test_add_multiple():

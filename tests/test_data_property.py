@@ -22,13 +22,11 @@ def test_setting_cardinality():
 def test_add_single_string():
     property = DataProperty(**{'name': 'Jack', 'cardinality': 'one'})
     property.add("A string")
-    print(property.values())
     assert property.values() == "A string"
 
 def test_add_single_literal():
     property = DataProperty(**{'name': 'Jack', 'cardinality': 'one'})
     property.add(PropertyLiteral("A string"))
-    print(property.values())
     assert property.values() == "A string"
 
 def test_add_single_literal_lang():
