@@ -1,11 +1,12 @@
 from rdflib import Graph
 from rdflib.plugins.stores import sparqlstore
+from rdfogm.settings import Settings
 
 class Connection(object):
     
     def __init__(self, graph):
-        self.__query_endpoint = r"http://localhost:3030/test/query"
-        self.__update_endpoint = r"http://localhost:3030/test/update"
+        self.__query_endpoint = self.__endpoint('query')
+        self.__update_endpoint = self.__endpoint('update')
         self.__store = sparqlstore.SPARQLUpdateStore(autocommit=False)
         self.__store.open((self.__query_endpoint,self.__update_endpoint))
         self.__default_graph_uri = graph
@@ -27,4 +28,12 @@ class Connection(object):
         self.__temp_graph = None
 
     def find(self, subject):
-        return self.__store.predicate_objects(subject)
+        return self.__default_graph.predicate_objects(subject)
+
+    def __endpoint(self, type):
+        settings = Settings()
+        protocol = settings.triple_store_protocol
+        host = settings.triple_store_host
+        port = settings.triple_store_port
+        ds = settings.triple_store_dataset
+        return f'{protocol}://{host}:{port}/{ds}/{type}'

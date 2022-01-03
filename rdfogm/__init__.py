@@ -4,6 +4,7 @@ from rdfogm.object_property import ObjectProperty
 from rdfogm.rdf_type_property import RdfTypeProperty
 from rdfogm.property_uri import PropertyUri
 from rdfogm.connection import Connection
+from rdfogm.settings import Settings
 
 class ModelMetaclass(type):
 
@@ -18,12 +19,13 @@ class ModelMetaclass(type):
         for k, v in properties.items():
             attrs.pop(k)
             predicates[v.predicate.__str__] = v
+        settings = Settings()
         attrs['__properties__'] = properties 
         attrs['__predicates__'] = predicates
         attrs['uri'] = None
         attrs['__new_record__'] = True
         attrs['__destroyed__'] = False
-        attrs['__connection__'] = Connection(PropertyUri('http://example.org/default-graph'))
+        attrs['__connection__'] = Connection(PropertyUri(settings.default_graph))
         attrs['__triples__'] = []
         return type.__new__(cls, name, bases, attrs)
 
@@ -100,7 +102,8 @@ class Model(object, metaclass=ModelMetaclass):
     @classmethod
     def find(cls, uri_or_id):
         object = None
-        connection = Connection(PropertyUri('http://example.org/default-graph'))
+        settings = Settings()
+        connection = Connection(PropertyUri(settings.default_graph))
         uri = cls.__to_uri(uri_or_id)
         result = connection.find(uri)
         for p, o in result:

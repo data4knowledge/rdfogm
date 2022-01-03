@@ -1,8 +1,8 @@
 import pytest
 import rdfogm
 
-from rdflib import URIRef, Literal
-from rdfogm import Model, ObjectProperty, DataProperty, RdfTypeProperty, PropertyUri
+from tests.helpers.triple_store import TripleStore
+from rdfogm import Model, ObjectProperty, DataProperty, RdfTypeProperty, PropertyUri, Settings
 
 class PersonTest(Model):
     rdf_type = RdfTypeProperty(PropertyUri("http://www.w3.org/TypeX"))
@@ -15,6 +15,25 @@ class PersonTest(Model):
 
     def __init__(self):
         super().__init__()
+
+@pytest.fixture(autouse=True)
+def run_before_and_after_tests(tmpdir):
+    settings = Settings()
+    ts = TripleStore()
+    ts.clear(settings.default_graph)
+    yield
+    # Teardown : fill with any logic you want
+
+@pytest.fixture
+def test_person():
+    person = PersonTest()
+    person.name = "Jack"
+    person.surname = "Daniel's"
+    person.nicknames.add("sid") 
+    person.rel = PropertyUri('http://example.com#rel-1') 
+    person.links.add(PropertyUri('http://example.com#links-1'))
+    person.links.add(PropertyUri('http://example.com#links-2'))
+    return person
 
 def test_instance_defaults():
     person = PersonTest()
@@ -38,36 +57,31 @@ def test_instance_property_set():
     assert person.rel == PropertyUri('http://example.com#AS1') 
     assert person.links.values()['1'] == PropertyUri('http://example.com#AS2') 
 
-def test_save_full():
-    person = PersonTest()
-    person.uri = PropertyUri('http://example.com#Subject11')
-    person.name = "Jack"
-    person.surname = "Daniel's"
-    person.nicknames.add("sid") 
-    person.rel = PropertyUri('http://example.com#rel-1') 
-    person.links.add(PropertyUri('http://example.com#links-1'))
-    person.links.add(PropertyUri('http://example.com#links-2'))
-    person.save()
+def test_save_full(test_person):
+    test_person.uri = PropertyUri('http://example.com#Subject11')
+    test_person.save()
 
-def test_save_partial():
-    person = PersonTest()
-    person.uri = PropertyUri('http://example.com#Subject22')
-    person.name = "Jack"
-    person.save()
-    person.surname = "Fred"
-    person.save()
+def test_save_partial(test_person):
+    test_person.uri = PropertyUri('http://example.com#Subject22')
+    test_person.save()
+    test_person.surname = "Fred"
+    test_person.save()
 
-def test_find():
-    uri = PropertyUri('http://www.data4knowledge.dk/ms/test-data-2')
+def test_find(test_person):
+    test_person.uri = PropertyUri('http://example.com#Subject33')
+    test_person.save()
+    uri = PropertyUri('http://example.com#Subject33')
     person = PersonTest.find(uri)
     assert type(person) == PersonTest
 
 def test_cannot_find():
-    uri = PropertyUri("http://dbpedia.org/resource/Asturias")
+    uri = PropertyUri('http://example.com#Subject44')
     person = PersonTest.find(uri)
     assert person == None
 
 def test_extra_triples():
+    ts = TripleStore()
+    ts.clear()
     uri = PropertyUri('http://www.data4knowledge.dk/ms/test-data-2')
     person = PersonTest.find(uri)
     print(len(person.triples()))
