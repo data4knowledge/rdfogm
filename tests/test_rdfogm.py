@@ -81,11 +81,11 @@ def test_cannot_find():
 
 def test_extra_triples():
     ts = TripleStore()
-    ts.clear()
-    uri = PropertyUri('http://www.data4knowledge.dk/ms/test-data-2')
+    ts.upload("/Users/daveih/Documents/python/rdfogm/tests/files/data-1.ttl", "http://www.data4knowledge/graphs/test")
+    uri = PropertyUri('http://www.data4knowledge/orgs/DUNS123456789')
     person = PersonTest.find(uri)
     print(len(person.triples()))
-    assert len(person.triples()) == 5
+    assert len(person.triples()) == 7
 
 
 

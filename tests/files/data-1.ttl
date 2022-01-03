@@ -1,0 +1,13 @@
+@prefix : <http://www.data4knowledge/orgs/> .
+@prefix org: <http://www.data4knowledge.dk/schema/organizations#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:DUNS123456789
+  rdf:type org:RegistrationAuthority ;
+  org:raNamespace :BBB ;
+  org:owner "true"^^xsd:boolean ;   
+  org:organizationIdentifier "123456789"^^xsd:string ;
+  org:internationalCodeDesignator "DUNS"^^xsd:string ; 
+  org:extra1 "Extra 1"^^xsd:string ; 
+  org:extra2 "Extra 2"^^xsd:string ; 

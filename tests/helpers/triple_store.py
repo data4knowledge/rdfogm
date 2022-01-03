@@ -12,8 +12,8 @@ class TripleStore:
         print(graph)
         self.__update(f'CLEAR {graph}')
 
-    def upload(self, filename):
-        self.__upload(filename)
+    def upload(self, filename, graph=""):
+        self.__upload(filename, graph)
 
     def query(self, sparql):
         self.__query(sparql)
@@ -41,34 +41,28 @@ class TripleStore:
         )
         return response
 
-    def __upload(self, filename):
-        #headers = {'Content-type': 'multipart/form-data'}
-        #response = requests.post(
-        #    self.__endpoint('upload'), 
-        #    headers = headers,
-        #    auth = self.__auth(),
-        #    files = {'file': open(filename, 'r')}
-        #)
-        #return response
-
+    def __upload(self, filename, graph=""):
         import os
         from requests_toolbelt import MultipartEncoder
 
         head, tail = os.path.split(filename)
         multipart_data = MultipartEncoder(fields={'file': (tail, open(filename, 'rb'), 'text/plain')}) 
         headers={'Content-Type': multipart_data.content_type}
-        response=requests.put(self.__endpoint('data'), data=multipart_data, auth=self.__auth(),headers=headers)
+        response=requests.put(self.__endpoint('data', graph), data=multipart_data, auth=self.__auth(),headers=headers)
         return response
 
     def __auth(self):
         return HTTPBasicAuth(self.__cfg__['username'], self.__cfg__['password'])
     
-    def __endpoint(self, type):
+    def __endpoint(self, type, graph=""):
         protocol = self.__cfg__['protocol']
         host = self.__cfg__['host']
         port = self.__cfg__['port']
         ds = self.__cfg__['dataset']
-        return f'{protocol}://{host}:{port}/{ds}/{type}'
+        endpoint = f'{protocol}://{host}:{port}/{ds}/{type}'
+        if graph != "":
+            endpoint += f'?graph={graph}'
+        return endpoint
 
     def __store_config(self):
         return {'protocol': 'http', 'host': 'localhost', 'port': '3030', 'dataset': 'test', 'username': '', 'password': ''}
