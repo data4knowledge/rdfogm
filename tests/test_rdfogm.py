@@ -1,8 +1,10 @@
 import pytest
-import rdfogm
+import os
 
 from tests.helpers.triple_store import TripleStore
 from rdfogm import Model, ObjectProperty, DataProperty, RdfTypeProperty, PropertyUri, Settings
+
+FIXTURE_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'files')
 
 class PersonTest(Model):
     rdf_type = RdfTypeProperty(PropertyUri("http://www.w3.org/TypeX"))
@@ -81,7 +83,7 @@ def test_cannot_find():
 
 def test_extra_triples():
     ts = TripleStore()
-    ts.upload("/Users/daveih/Documents/python/rdfogm/tests/files/data-1.ttl", "http://www.data4knowledge/graphs/test")
+    ts.upload(os.path.join(FIXTURE_DIR, "data-1.ttl"), "http://www.data4knowledge/graphs/test")
     uri = PropertyUri('http://www.data4knowledge/orgs/DUNS123456789')
     person = PersonTest.find(uri)
     assert len(person.triples()) == 7

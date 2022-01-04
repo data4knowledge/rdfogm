@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 jobs:
-  rspec:
+  test:
     runs-on: ubuntu-latest
     steps:
 
