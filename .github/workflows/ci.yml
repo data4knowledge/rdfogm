@@ -10,6 +10,13 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v1
 
+    - name: Create env file
+      run: |
+        touch .env
+        echo TRIPLE_STORE_PROTOCOL="http" >> .env
+        echo DEFAULT_GRAPH="http://www.data4knowledge/graphs/test" >> .env
+        cat .env
+        
     - name: Install Python
       uses: actions/setup-python@v2
       with:
@@ -31,8 +38,6 @@ jobs:
         time: 15s
     
     - name: Run tests
-      env:
-        RAILS_ENV: test
       run: |
         pytest tests/
 
