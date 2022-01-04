@@ -1,0 +1,35 @@
+name: CI
+
+on: [push]
+
+jobs:
+  rspec:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout Code
+      uses: actions/checkout@v1
+
+    - name: Python Setup
+      uses: actions/setup-python@v2
+        python-version: '3.10'
+      - run: | 
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -e .
+
+    - name: Fuseki Triple Store
+      run: |
+          docker run -d -p 3030:3030 daveih/fuseki:v3.16.0 --loc ds --update /test
+
+    - name: Sleep
+      uses: juliangruber/sleep-action@v1
+      with:
+        time: 15s
+    
+    - name: Run tests
+      env:
+        RAILS_ENV: test
+      run: |
+        pytest tests/
+
