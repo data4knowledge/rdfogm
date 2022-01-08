@@ -12,3 +12,7 @@ def test_defaults():
 def test_graph():
     settings = Settings()
     assert settings.default_graph == "http://www.data4knowledge/graphs/test"
+
+def test_graph():
+    settings = Settings()
+    assert settings.rdf_types['http://www.example.com/A'] == 'ModelName'
