@@ -13,7 +13,6 @@ pytest==6.2.5
 python-dotenv==0.19.2
 PyYAML==6.0
 rdflib==6.1.1
-rdfogm==0.0.1
 requests==2.27.1
 requests-toolbelt==0.9.1
 six==1.16.0
