@@ -13,8 +13,7 @@ jobs:
     - name: Create env file
       run: |
         touch .env
-        echo TRIPLE_STORE_PROTOCOL="http" >> .env
-        echo DEFAULT_GRAPH="http://www.data4knowledge/graphs/test" >> .env
+        echo ENVIRONMENT="test" >> .env
         cat .env
         
     - name: Install Python
