@@ -18,6 +18,12 @@ class PersonTest(Model):
     def __init__(self):
         super().__init__()
 
+class Type1Test(Model):
+    rdf_type = RdfTypeProperty(PropertyUri("http://www.w3.org/Type1"))
+
+class Type2Test(Model):
+    rdf_type = RdfTypeProperty(PropertyUri("http://www.w3.org/Type2"))
+
 @pytest.fixture(autouse=True)
 def run_before_and_after_tests(tmpdir):
     settings = Settings()
@@ -88,5 +94,16 @@ def test_extra_triples():
     person = PersonTest.find(uri)
     assert len(person.triples()) == 7
 
-
+def test_rdf_type():
+    ts = TripleStore()
+    ts.upload(os.path.join(FIXTURE_DIR, "data-2.ttl"), "http://www.data4knowledge/graphs/test")
+    settings = Settings()
+    settings.rdf_types['http://www.w3.org/Type1'] = Type1Test
+    settings.rdf_types['http://www.w3.org/Type2'] = Type2Test
+    uri = PropertyUri('http://www.w3.org/Type1')
+    klass = Model.klass_from_rdf_type(uri)
+    assert klass == Type1Test
+    uri = PropertyUri('http://www.w3.org/Type2')
+    klass = Model.klass_from_rdf_type(uri)
+    assert klass == Type2Test
 

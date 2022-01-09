@@ -1,0 +1,12 @@
+@prefix : <http://www.data4knowledge/test/> .
+@prefix org: <http://www.data4knowledge.dk/schema/organizations#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:Test1
+  rdf:type <http://www.w3.org/Type1> ;
+  org:extra "Test 1"^^xsd:string ; 
+
+:Test2
+  rdf:type <http://www.w3.org/Type2> ;
+  org:extra "Test 2"^^xsd:string ; 
