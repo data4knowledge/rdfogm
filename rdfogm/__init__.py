@@ -119,5 +119,17 @@ class Model(object, metaclass=ModelMetaclass):
         return object
 
     @classmethod
+    def klass_from_rdf_type(cls, uri):
+        settings = Settings()
+        print(settings)
+        key = uri.__str__()
+        print(key)
+        try:
+          klass = settings.rdf_types[key]
+          return klass
+        except KeyError:
+          return None
+
+    @classmethod
     def __to_uri(cls, uri_or_id):
         return uri_or_id if isinstance(uri_or_id, PropertyUri) else PropertyUri.from_id(uri_or_id)

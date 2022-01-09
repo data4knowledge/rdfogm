@@ -6,7 +6,8 @@
 :Test1
   rdf:type <http://www.w3.org/Type1> ;
   org:extra "Test 1"^^xsd:string ; 
-
+.
 :Test2
   rdf:type <http://www.w3.org/Type2> ;
   org:extra "Test 2"^^xsd:string ; 
+.

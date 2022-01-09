@@ -95,15 +95,18 @@ def test_extra_triples():
     assert len(person.triples()) == 7
 
 def test_rdf_type():
-    ts = TripleStore()
-    ts.upload(os.path.join(FIXTURE_DIR, "data-2.ttl"), "http://www.data4knowledge/graphs/test")
-    settings = Settings()
-    settings.rdf_types['http://www.w3.org/Type1'] = Type1Test
-    settings.rdf_types['http://www.w3.org/Type2'] = Type2Test
     uri = PropertyUri('http://www.w3.org/Type1')
     klass = Model.klass_from_rdf_type(uri)
-    assert klass == Type1Test
+    assert klass == 'Type1Test'
     uri = PropertyUri('http://www.w3.org/Type2')
     klass = Model.klass_from_rdf_type(uri)
-    assert klass == Type2Test
+    assert klass == 'Type2Test'
 
+def test_rdf_type_and_read():
+    ts = TripleStore()
+    ts.upload(os.path.join(FIXTURE_DIR, "data-2.ttl"), "http://www.data4knowledge/graphs/test")
+    uri = PropertyUri('http://www.w3.org/Type1')
+    klass = Model.klass_from_rdf_type(uri)
+    uri = PropertyUri('http://www.data4knowledge/test/Test1')
+    result = eval(klass).find(uri)
+    assert len(result.triples()) == 2
