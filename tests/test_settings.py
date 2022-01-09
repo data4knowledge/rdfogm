@@ -4,10 +4,10 @@ from rdfogm.settings import Settings
 
 def test_defaults():
     settings = Settings()
-    assert settings.triple_store_protocol == "http"
-    assert settings.triple_store_host == "localhost"
-    assert settings.triple_store_port == "3030"
-    assert settings.triple_store_dataset == "test"
+    assert settings.protocol == "http"
+    assert settings.host == "localhost"
+    assert settings.port == "3030"
+    assert settings.dataset == "test"
 
 def test_graph():
     settings = Settings()

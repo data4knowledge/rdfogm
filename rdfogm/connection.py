@@ -32,8 +32,8 @@ class Connection(object):
 
     def __endpoint(self, type):
         settings = Settings()
-        protocol = settings.triple_store_protocol
-        host = settings.triple_store_host
-        port = settings.triple_store_port
-        ds = settings.triple_store_dataset
+        protocol = settings.protocol
+        host = settings.host
+        port = settings.port
+        ds = settings.dataset
         return f'{protocol}://{host}:{port}/{ds}/{type}'

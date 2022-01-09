@@ -1,0 +1,3 @@
+rdf_types: 
+  http://www.example.com/A: ModelName
+default_graph: http://www.data4knowledge/graphs/test
