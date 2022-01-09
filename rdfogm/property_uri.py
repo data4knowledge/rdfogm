@@ -5,7 +5,7 @@ from rdflib.term import URIRef
 class PropertyUri(URIRef):
     
     def __init__(self, value):
-        self.__uri = URIRef(value)
+        self.__uri = value if isinstance(value, URIRef) else URIRef(value)
 
     def to_id(self):
         message_bytes = self.__uri.encode('ascii')

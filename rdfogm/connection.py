@@ -1,6 +1,8 @@
-from rdflib import Graph
+from rdflib import Graph, RDF
 from rdflib.plugins.stores import sparqlstore
-from rdfogm.settings import Settings
+from rdfogm .settings import Settings
+from rdfogm.property_uri import PropertyUri
+
 
 class Connection(object):
     
@@ -29,6 +31,11 @@ class Connection(object):
 
     def find(self, subject):
         return self.__default_graph.predicate_objects(subject)
+
+    def rdf_type(self, subject):
+        for s, p, o in self.__default_graph.triples((subject, RDF.type, None)):
+          print(f"is a {o}")
+          return PropertyUri(o)
 
     def __endpoint(self, type):
         settings = Settings()

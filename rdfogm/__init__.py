@@ -119,16 +119,20 @@ class Model(object, metaclass=ModelMetaclass):
         return object
 
     @classmethod
-    def klass_from_rdf_type(cls, uri):
-        settings = Settings()
-        print(settings)
-        key = uri.__str__()
-        print(key)
+    def klass_for_uri(cls, uri):
+        key = cls.rdf_type(uri)
         try:
-          klass = settings.rdf_types[key]
+          settings = Settings()
+          klass = settings.rdf_types[key.__str__()]
           return klass
         except KeyError:
           return None
+
+    @classmethod
+    def rdf_type(cls, uri):
+        settings = Settings()
+        connection = Connection(PropertyUri(settings.default_graph))
+        return connection.rdf_type(uri)
 
     @classmethod
     def __to_uri(cls, uri_or_id):

@@ -1,10 +1,16 @@
 import pytest
+from rdflib.term import URIRef
 
 from rdfogm.property_uri import PropertyUri
 
-def test_initial_state():
-    value = PropertyUri("XXX")
-    assert value.__str__() == "XXX"
+def test_initial_state_uri():
+    value = PropertyUri("http://www.example.com")
+    assert value.__str__() == "http://www.example.com"
+
+def test_initial_state_string():
+    uri = URIRef("http://www.example.com")
+    value = PropertyUri(uri)
+    assert value.__str__() == "http://www.example.com"
 
 def test_initial_state_empty():
     value = PropertyUri("")
