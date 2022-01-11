@@ -16,6 +16,7 @@ setup(
         install_requires=['rdflib'],
         keywords=['python', 'RDF'],
         tests_require=['pytest'],
+        data_files=[('', ['rdfogm_config.yml'])],
         classifiers=[
         "Intended Audience :: Developers",
         "Programming Language :: Python",
