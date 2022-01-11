@@ -105,9 +105,9 @@ class Model(object, metaclass=ModelMetaclass):
         connection = Connection(PropertyUri(settings.default_graph))
         uri = cls.__to_uri(uri_or_id)
         result = connection.find(uri)
-        print(result)
+        print(f"Find: {result}", flush=True)
         for p, o in result:
-            print(p,o)
+            print(f"Find: ({p} {o})", flush=True)
             if object == None:
                 object = cls()
             try:

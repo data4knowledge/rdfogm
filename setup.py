@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.0.4' 
+VERSION = '0.0.5' 
 DESCRIPTION = 'RDF Object Graph Mapper'
 LONG_DESCRIPTION = 'A first attempt at an RDF Object Graph Mapper. Very simpe to start with.'
 
